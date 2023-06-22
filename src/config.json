@@ -1,0 +1,4 @@
+{
+  "apiBetEndpoint": "http://localhost:8000",
+  "apiBetEndpoint1": "http://super-mart2.herokuapp.com"
+}

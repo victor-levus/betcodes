@@ -1,0 +1,20 @@
+@import "./styles/variables.scss";
+@import "./styles/homePage.scss";
+@import "./styles/navBar.scss";
+@import "./styles/bootstrap.scss";
+
+body {
+  background-color: $primary-bg;
+  color: $grayL;
+
+  .app--cover {
+    margin-top: 60px;
+    padding: 0.5rem;
+  }
+}
+
+a {
+  color: $grayD;
+  font-weight: 400;
+  text-decoration: none;
+}
