@@ -70,7 +70,9 @@
         display: flex;
         flex-direction: column;
         margin-bottom: 0.5rem;
+        background-color: $secondary-bg;
         transition: all 0.2s ease-in-out;
+
         &:hover {
           background: $hover-bg;
         }
@@ -90,9 +92,11 @@
           .bet-event {
             font-weight: 400;
             text-align: end;
+            color: $orangeD;
 
             .odd--figure {
               font-size: 0.7rem;
+              color: $grayD;
             }
           }
         }

@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import moment from "moment/moment";
 
 import BookInfo from "../components/bookInfo";
 import _ from "lodash";
 import BetDisplayCard from "../components/BetDisplayCard";
 import PosterCard from "../components/chakra/PosterCard";
-import { Heading } from "@chakra-ui/react";
+import { AppContext } from "../context/ProductContext";
 
 const HomePage = () => {
+  const { betData } = useContext(AppContext);
   const [activeSelected, setActiveSelected] = useState("slide 4");
-  const betData = [];
   const bookCodeData = "";
 
   const selectActive = (e) => {
@@ -78,9 +78,7 @@ const HomePage = () => {
             text2="Stake only what you can lose"
           />
 
-          <Heading color={"gray.400"} fontSize={"4xl"} marginY={10}>
-            Fixture
-          </Heading>
+          <h1 className="mt-3">Fixture</h1>
 
           <div className="">
             <div

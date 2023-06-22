@@ -1,7 +1,10 @@
 import React from "react";
 import { MdMenu } from "react-icons/md";
+import useComponentVisible from "../hooks/useComponentVisible";
 
 const NavBar = () => {
+  const { ref, isComponentVisible } = useComponentVisible(true);
+
   const toggleMenuOpen = () => {
     document.body.classList.toggle("open");
   };
@@ -32,11 +35,17 @@ const NavBar = () => {
           <button type="button">
             <a href="/forum">Forum</a>
           </button>
-          <button type="button">
-            <a href="/account">Account</a>
+          <button ref={ref} type="button">
+            <a>Account</a>
           </button>
         </nav>
       </nav>
+
+      {isComponentVisible && (
+        <div id="account--link" className="account--popup">
+          {<h4>Account</h4>}
+        </div>
+      )}
     </div>
   );
 };

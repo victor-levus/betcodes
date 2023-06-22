@@ -2,11 +2,11 @@ import React from "react";
 import { FaCheck, FaTimes, FaSquare } from "react-icons/fa";
 import moment from "moment";
 
-const check = <FaCheck className="check--icon" />;
-const cross = <FaTimes className="cross--icon" />;
-const box = <FaSquare className="box--icon" />;
+const check = <FaCheck color="green" size={15} className="check--icon" />;
+const cross = <FaTimes color="red" size={18} className="cross--icon" />;
+const box = <FaSquare size={18} className="box--icon" />;
 
-const BetDisplayCard = (item) => {
+const BetDisplayCard = ({ item }) => {
   return (
     <div>
       <div className="card-container">

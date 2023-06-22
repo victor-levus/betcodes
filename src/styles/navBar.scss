@@ -124,3 +124,23 @@ body.open .navbar-menu {
 .navbar-menu > button.active {
   color: inherit;
 }
+
+#nav--bar {
+  .account--popup {
+    // display: none;
+    background-color: #e6e4e4;
+    color: black;
+    border-radius: 7px;
+    position: absolute;
+    right: 10px;
+    top: 70px;
+    z-index: 10;
+    width: 250px;
+    height: 300px;
+    padding: 0.5rem;
+  }
+
+  .show {
+    display: block;
+  }
+}
