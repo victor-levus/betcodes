@@ -1,18 +1,15 @@
 import http from "./httpService";
 import config from "../config.json";
-import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
-// import { Navigate } from "react-router-dom";
 
 const apiAuth = config.apiBetEndpoint + "/auth/jwt/create";
+const apiUser = config.apiBetEndpoint + "/auth/users/me";
 const tokenKey = "token";
 const refreshKey = "refresh";
 
-http.setJwt(getJwt());
-
-async function login(username, password) {
+async function login(formData) {
   try {
-    const promise = await http.post(apiAuth, { username, password });
+    const promise = await http.post(apiAuth, formData);
     localStorage.setItem(tokenKey, promise.data.access);
     localStorage.setItem(refreshKey, promise.data.refresh);
     return promise.data;
@@ -35,11 +32,15 @@ async function logout() {
   localStorage.removeItem(tokenKey);
 }
 
-function getCurrentUser() {
+async function getCurrentUser() {
   try {
-    const jwt = localStorage.getItem(tokenKey);
-    const user = jwtDecode(jwt);
-    return user;
+    const jwt = getJwt();
+    if (!jwt) return null;
+
+    http.setJwtHeader(jwt);
+
+    const user = await http.get(apiUser);
+    return user.data;
   } catch (ex) {
     return null;
   }

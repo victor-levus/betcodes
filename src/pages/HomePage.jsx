@@ -6,9 +6,10 @@ import _ from "lodash";
 import BetDisplayCard from "../components/BetDisplayCard";
 import PosterCard from "../components/chakra/PosterCard";
 import { AppContext } from "../context/ProductContext";
+import ForumPage from "./auth/ForumPage";
 
 const HomePage = () => {
-  const { betData } = useContext(AppContext);
+  const { betData, userData: user } = useContext(AppContext);
   const [activeSelected, setActiveSelected] = useState("slide 4");
   const bookCodeData = "";
 
@@ -78,9 +79,9 @@ const HomePage = () => {
             text2="Stake only what you can lose"
           />
 
-          <h1 className="mt-3">Fixture</h1>
+          <h1 className="my-4">Fixture</h1>
 
-          <div className="">
+          <div className="carousel--cover">
             <div
               id="carouselExampleIndicators"
               className="carousel slide"
@@ -326,6 +327,8 @@ const HomePage = () => {
               </div>
             </div>
           </div>
+
+          {user && <ForumPage />}
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 import http from "./httpService";
 import config from "../config.json";
 import { toast } from "react-toastify";
+import authService from "./authService";
 
 const apiPosts = config.apiBetEndpoint + "/betcodes/posts/";
 
@@ -9,6 +10,11 @@ function postUrl(id) {
 }
 
 export function getPosts() {
+  const jwt = authService.getJwt();
+  if (!jwt) return;
+
+  http.setJwtHeader(jwt);
+
   return http.get(apiPosts);
 }
 

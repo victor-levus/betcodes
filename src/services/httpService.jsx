@@ -14,7 +14,7 @@ axios.interceptors.response.use(null, (error) => {
   return Promise.reject(error);
 });
 
-function setJwt(jwt) {
+function setJwtHeader(jwt) {
   axios.defaults.headers["Authorization"] = `${"JWT"} ${jwt}`;
 }
 
@@ -25,5 +25,5 @@ export default {
   put: axios.put,
   patch: axios.patch,
   delete: axios.delete,
-  setJwt,
+  setJwtHeader,
 };

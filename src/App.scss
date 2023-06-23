@@ -1,6 +1,8 @@
 @import "./styles/variables.scss";
 @import "./styles/homePage.scss";
 @import "./styles/navBar.scss";
+@import "./styles/profilePage.scss";
+@import "./styles/forumPage.scss";
 @import "./styles/bootstrap.scss";
 
 body {
@@ -17,4 +19,8 @@ a {
   color: $grayD;
   font-weight: 400;
   text-decoration: none;
+}
+
+.app--modal {
+  color: $grayD;
 }
