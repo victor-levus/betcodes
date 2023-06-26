@@ -3,15 +3,33 @@
 @import "./styles/navBar.scss";
 @import "./styles/profilePage.scss";
 @import "./styles/forumPage.scss";
+@import "./styles/loginPage.scss";
 @import "./styles/bootstrap.scss";
+
+html {
+}
 
 body {
   background-color: $primary-bg;
   color: $grayL;
+  box-sizing: border-box;
 
   .app--cover {
     margin-top: 60px;
     padding: 0.5rem;
+    max-width: 800px;
+  }
+
+  .expeired-session {
+    position: fixed;
+    bottom: 10px;
+    right: -255px;
+    max-width: 255px;
+    transition: all 0.6s ease-in;
+  }
+
+  .show-alert {
+    right: 0;
   }
 }
 

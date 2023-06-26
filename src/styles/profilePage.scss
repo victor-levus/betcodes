@@ -22,6 +22,7 @@
         .user--info {
           border: 0.5px solid $hover-bg;
           padding: 2rem 1rem;
+          min-width: 250px;
           h2 {
             font-size: 1.3rem;
           }

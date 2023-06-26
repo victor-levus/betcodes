@@ -1,8 +1,8 @@
 import React from "react";
 
-const Loading = () => {
+const Loading = ({ loadType }) => {
   return (
-    <div className="d-flex justify-content-center loading---page">
+    <div className={`d-flex justify-content-center loading ${loadType}`}>
       <div className="spinner-border" role="status">
         <span className="visually-hidden">Loading...</span>
       </div>

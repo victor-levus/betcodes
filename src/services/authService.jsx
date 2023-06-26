@@ -3,23 +3,24 @@ import config from "../config.json";
 import { toast } from "react-toastify";
 
 const apiAuth = config.apiBetEndpoint + "/auth/jwt/create";
+const apiVerifyToken = config.apiBetEndpoint + "/auth/jwt/verify";
 const apiUser = config.apiBetEndpoint + "/auth/users/me";
 const tokenKey = "token";
 const refreshKey = "refresh";
 
 async function login(formData) {
   try {
-    const promise = await http.post(apiAuth, formData);
-    localStorage.setItem(tokenKey, promise.data.access);
-    localStorage.setItem(refreshKey, promise.data.refresh);
-    return promise.data;
+    const response = await http.post(apiAuth, formData);
+    localStorage.setItem(tokenKey, response.data.access);
+    localStorage.setItem(refreshKey, response.data.refresh);
+    return response;
   } catch (error) {
     if (error == "Error: Request failed with status code 401") {
       toast.error("Invalid Login Credential");
     } else if (error == "Error: Request failed with status code 400") {
       toast.error("Provide Username & Password");
     } else {
-      toast.error(error + "");
+      toast.error(error.message + "");
     }
   }
 }
@@ -32,17 +33,36 @@ async function logout() {
   localStorage.removeItem(tokenKey);
 }
 
+async function verifyToken() {
+  const jwt = getJwt();
+  if (!jwt) return null;
+  else {
+    try {
+      const isTokenVerify = await http.post(apiVerifyToken, { token: jwt });
+
+      return isTokenVerify ? isTokenVerify.statusText : null;
+    } catch (error) {}
+  }
+}
+
 async function getCurrentUser() {
   try {
     const jwt = getJwt();
     if (!jwt) return null;
 
-    http.setJwtHeader(jwt);
+    const isTokenVerify = await http.post(apiVerifyToken, { token: jwt });
 
-    const user = await http.get(apiUser);
-    return user.data;
-  } catch (ex) {
-    return null;
+    if (isTokenVerify.status) {
+      http.setJwtHeader(jwt);
+
+      const user = await http.get(apiUser);
+
+      return user.data;
+    }
+  } catch (error) {
+    if (error.message === "Request failed with status code 401") {
+      // localStorage.removeItem("token");
+    }
   }
 }
 
@@ -57,4 +77,5 @@ export default {
   logout,
   getCurrentUser,
   getJwt,
+  verifyToken,
 };

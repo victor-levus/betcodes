@@ -15,21 +15,27 @@ import LoginForm from "./forms/LoginForm";
 import SignUpForm from "./forms/SignUpForm";
 import authService from "../services/authService";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { register } from "../services/userService";
 
 const NavBar = () => {
   const [menuSelect, setMenuSelect] = useState("");
   const [formData, setFormData] = useState({});
   const [user, setUser] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
   useEffect(() => {
     getCurrentUser();
-  }, [user]);
+  }, []);
 
   const getCurrentUser = async () => {
-    const user = await authService.getCurrentUser();
-    setUser(user);
+    try {
+      const user = await authService.getCurrentUser();
+      setUser(user);
+    } catch (error) {}
   };
 
   const toggleMenuOpen = () => {
@@ -53,30 +59,54 @@ const NavBar = () => {
     const value = e.target.value;
 
     setFormData({ ...formData, [name]: value });
+    setError({ ...error, [name]: "" });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (menuSelect === "sign--in-btn") {
-      const { access } = await authService.login(formData);
 
-      if (access) {
-        const user = await authService.getCurrentUser();
-        if (user.id) {
-          setUser(user);
-          toast.success("Login succeeded");
+    try {
+      if (menuSelect === "sign--in-btn") {
+        const { data } = await authService.login(formData);
+
+        if (data.access) {
           document.getElementById("modal--close-btn").click();
           window.location.reload();
         }
       }
-    }
+
+      if (menuSelect === "sign--up-btn") {
+        const response = await register(formData);
+
+        if (response.status === 201) {
+          document.getElementById("modal--close-btn").click();
+
+          const loginResponse = await authService.login({
+            username: formData.username,
+            password: formData.password,
+          });
+
+          if (loginResponse.status === 200) {
+            setUser(response.data);
+            window.location.reload();
+          }
+
+          if (loginResponse.status === 400) {
+            // setUser(loginResponse.data)
+            // window.location.reload();
+          }
+        }
+
+        if (response.status === 400) {
+          setError(response.data);
+        }
+      }
+    } catch (error) {}
   };
 
   const logout = () => {
     authService.logout();
     window.location.reload();
-    // getCurrentUser();
-    // return closeIsComponentVisible();
   };
 
   return (
@@ -93,7 +123,11 @@ const NavBar = () => {
           menuSelect === "sign--in-btn" ? (
             <LoginForm onChange={handleChange} onSubmit={handleSubmit} />
           ) : menuSelect === "sign--up-btn" ? (
-            <SignUpForm onChange={handleChange} onSubmit={handleSubmit} />
+            <SignUpForm
+              error={error}
+              onChange={handleChange}
+              onSubmit={handleSubmit}
+            />
           ) : null
         }
       />
@@ -173,8 +207,11 @@ const NavBar = () => {
             </>
           )}
 
-          <button className=" account--close-btn">
-            <MdClose onClick={closeIsComponentVisible} size={20} />
+          <button
+            onClick={closeIsComponentVisible}
+            className=" account--close-btn"
+          >
+            <MdClose size={20} />
           </button>
         </div>
       )}

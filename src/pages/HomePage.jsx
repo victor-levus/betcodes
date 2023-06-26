@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import moment from "moment/moment";
 
 import BookInfo from "../components/bookInfo";
@@ -7,11 +7,24 @@ import BetDisplayCard from "../components/BetDisplayCard";
 import PosterCard from "../components/chakra/PosterCard";
 import { AppContext } from "../context/ProductContext";
 import ForumPage from "./auth/ForumPage";
+import Loading from "../components/Loading";
+import authService from "../services/authService";
 
 const HomePage = () => {
-  const { betData, userData: user } = useContext(AppContext);
+  const { betData } = useContext(AppContext);
+  const [user, setUser] = useState();
+
   const [activeSelected, setActiveSelected] = useState("slide 4");
   const bookCodeData = "";
+
+  useEffect(() => {
+    getCurrentUser();
+  }, []);
+
+  const getCurrentUser = async () => {
+    const user = await authService.getCurrentUser();
+    setUser(user);
+  };
 
   const selectActive = (e) => {
     const name = e.target.id;
@@ -29,7 +42,7 @@ const HomePage = () => {
     const sortData = [].concat(filterData);
 
     if (betData === "") {
-      return <h6>LOADING...</h6>;
+      return <Loading />;
     } else {
       if (sortData.length == 0) {
         return <h6>There is No games on the selected date</h6>;
@@ -67,6 +80,8 @@ const HomePage = () => {
       return filterbookCode[0].total_odd;
     }
   };
+
+  // console.log(betData);
 
   return (
     <>
@@ -328,7 +343,15 @@ const HomePage = () => {
             </div>
           </div>
 
-          {user && <ForumPage />}
+          {!user ? (
+            <>
+              <h3>Forum</h3>
+
+              <PosterCard text1={"You need to Login to join the forum"} />
+            </>
+          ) : (
+            <ForumPage />
+          )}
         </div>
       </div>
     </>

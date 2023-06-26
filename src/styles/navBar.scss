@@ -137,7 +137,7 @@ body.open .navbar-menu {
     background-color: $grayL-trans;
     color: white;
     border-radius: 7px;
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 60px;
     z-index: 2;
@@ -146,6 +146,8 @@ body.open .navbar-menu {
     padding: 0.5rem;
 
     .account--close-btn {
+      box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px,
+        rgb(51, 51, 51) 0px 0px 0px 3px;
       border-radius: 3px;
       color: $danger;
       padding: 0.01rem 0.5rem;
@@ -154,12 +156,7 @@ body.open .navbar-menu {
       right: 10px;
       font-weight: 800;
       width: 20%;
-      border: 1px solid $hover-bg;
     }
-  }
-
-  .show {
-    display: block;
   }
 }
 

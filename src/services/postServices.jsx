@@ -4,18 +4,36 @@ import { toast } from "react-toastify";
 import authService from "./authService";
 
 const apiPosts = config.apiBetEndpoint + "/betcodes/posts/";
+const apiMyPosts = config.apiBetEndpoint + "/betcodes/profileposts/";
 
 function postUrl(id) {
   return `${apiPosts}${id}`;
 }
 
 export function getPosts() {
-  const jwt = authService.getJwt();
-  if (!jwt) return;
+  try {
+    const jwt = authService.getJwt();
 
-  http.setJwtHeader(jwt);
+    if (!jwt) return;
 
-  return http.get(apiPosts);
+    http.setJwtHeader(jwt);
+    const result = http.get(apiPosts);
+
+    return result;
+  } catch (error) {}
+}
+
+export function getMyPosts() {
+  try {
+    const jwt = authService.getJwt();
+
+    if (!jwt) return;
+
+    http.setJwtHeader(jwt);
+    const result = http.get(apiMyPosts);
+
+    return result;
+  } catch (error) {}
 }
 
 export function getPost(postId) {

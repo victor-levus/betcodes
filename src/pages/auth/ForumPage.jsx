@@ -1,13 +1,50 @@
-import React, { useContext, useState } from "react";
-import { AppContext } from "../../context/ProductContext";
-import { Navigate, useNavigate } from "react-router";
-import { savePost } from "../../services/postServices";
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router";
+import { getPosts, savePost } from "../../services/postServices";
 import { toast } from "react-toastify";
+import authService from "../../services/authService";
+import Loading from "../../components/Loading";
+import PosterCard from "../../components/chakra/PosterCard";
+import ExpiredSessionAlert from "../../components/ExpiredSessionAlert";
 
 const ForumPage = () => {
-  const navigate = useNavigate();
-  const { userData: user, postData } = useContext(AppContext);
+  const [user, setUser] = useState();
+  const [postData, setPostData] = useState();
   const [postDescription, setPostDescription] = useState();
+  const [expiredSession, setExpiredSession] = useState(false);
+
+  useEffect(() => {
+    getCurrentUser();
+    getForumPosts();
+    verifyToken();
+  }, []);
+
+  const getCurrentUser = async () => {
+    try {
+      const user = await authService.getCurrentUser();
+      setUser(user);
+    } catch (error) {}
+  };
+
+  const verifyToken = async () => {
+    const result = await authService.verifyToken();
+    if (!result) {
+      setExpiredSession(true);
+    }
+  };
+
+  const getForumPosts = async () => {
+    try {
+      const result = await getPosts();
+
+      // if (!result.data) return toast.error("Error");
+      setPostData(result.data);
+    } catch (error) {
+      if (error.message === "Request failed with status code 401") {
+        // localStorage.removeItem("token");
+      }
+    }
+  };
 
   const loopPosts = () => {
     const sortData = [].concat(postData);
@@ -43,6 +80,9 @@ const ForumPage = () => {
       });
 
       if (result.data) {
+        getForumPosts();
+        setPostDescription("");
+
         toast.success("Post Submitted Successful");
 
         postForm.value = "";
@@ -50,7 +90,9 @@ const ForumPage = () => {
       }
       return toast.error("Internal Server Error");
     } catch (error) {
-      return toast.error(error + "");
+      if (error.message === "Request failed with status code 401") {
+        // localStorage.removeItem("token");
+      }
     }
   };
 
@@ -60,48 +102,53 @@ const ForumPage = () => {
     setPostDescription(value);
   };
 
+  // if (!authService.getJwt()) return <Navigate to={"/login"} />;
+
   return (
     <>
-      {!user ? (
-        navigate("/login")
-      ) : (
-        <div id="forum--page">
-          <div className="content-container">
-            <div className="">
-              <div className="forum--container">
-                <h3>Forum</h3>
-                <form onSubmit={handlePostSubmit}>
-                  <div className="mb-3">
-                    <div>
-                      <textarea
-                        id="post---form"
-                        cols="30"
-                        rows="3"
-                        className="forum-textarea"
-                        placeholder="Type anything and post"
-                        onChange={handlePostChange}
-                      ></textarea>
-                    </div>
+      <ExpiredSessionAlert value={expiredSession} />
+      <div id="forum--page">
+        <div className="content-container">
+          <div className="">
+            <div className="forum--container">
+              <h3>Forum</h3>
+              <form onSubmit={handlePostSubmit}>
+                <div className="mb-3">
+                  <div>
+                    <textarea
+                      id="post---form"
+                      cols="30"
+                      rows="3"
+                      className="forum-textarea"
+                      placeholder="Type anything and post"
+                      onChange={handlePostChange}
+                    ></textarea>
                   </div>
-
-                  <button
-                    disabled={!postDescription}
-                    type="submit"
-                    className="btn btn-dark"
-                  >
-                    Post
-                  </button>
-                </form>
-                <div className="posts-trend">
-                  <div className="post---title">List of Posts</div>
-
-                  {loopPosts()}
                 </div>
+
+                <button
+                  disabled={!postDescription}
+                  type="submit"
+                  className="btn btn-dark"
+                >
+                  Post
+                </button>
+              </form>
+              <div className="posts-trend">
+                <div className="post---title">List of Posts</div>
+
+                {!postData ? (
+                  <Loading />
+                ) : postData.length === 0 ? (
+                  <PosterCard text1={"No post available"} />
+                ) : (
+                  loopPosts()
+                )}
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
