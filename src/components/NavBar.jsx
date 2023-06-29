@@ -7,6 +7,7 @@ import {
   MdMenu,
   MdPeople,
   MdPerson,
+  MdPerson2,
   MdPerson3,
 } from "react-icons/md";
 import useComponentVisible from "../hooks/useComponentVisible";
@@ -17,6 +18,7 @@ import authService from "../services/authService";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { register } from "../services/userService";
+import ImageLogo from "../asserts/profile pics.png";
 
 const NavBar = () => {
   const [menuSelect, setMenuSelect] = useState("");
@@ -154,12 +156,6 @@ const NavBar = () => {
             <a href="/">Home</a>
           </button>
 
-          {user && (
-            <button className="username--" type="button">
-              <a>{user.username}</a>
-            </button>
-          )}
-
           <button id="account--btn" onClick={toggleDropDown} type="button">
             <MdPerson size={25} />
           </button>
@@ -170,6 +166,13 @@ const NavBar = () => {
         <div ref={ref} id="account--link" className="account--popup">
           {user ? (
             <div className="">
+              <div className="account--info">
+                <img className="image--logo" src={ImageLogo} alt="image-logo" />
+                <p>
+                  {user.first_name} {user.last_name}
+                </p>
+                <p>{user.email}</p>
+              </div>
               <a href="/account">
                 <button className="btn btn-outline-secondary w-100 mb-3">
                   {<MdPerson3 />} Account
@@ -191,7 +194,7 @@ const NavBar = () => {
                 name="sign--in-btn"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
-                className="btn btn-danger w-100 mb-3"
+                className=" btn-danger w-100"
               >
                 {<MdLogin />} Sign In
               </button>
@@ -200,7 +203,7 @@ const NavBar = () => {
                 name="sign--up-btn"
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
-                className="btn btn-secondary w-100"
+                className=" btn-danger w-100"
               >
                 {<MdAppRegistration />} Sign Up
               </button>

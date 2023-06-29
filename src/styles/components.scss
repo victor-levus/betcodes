@@ -1,0 +1,117 @@
+//PostCard Component Style
+.post--card-cover {
+  background-color: $secondary-bg;
+  padding-bottom: 1rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+
+  .post--user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  .profile--info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    a {
+      color: $orangeL;
+      &:hover {
+        color: $orangeD;
+      }
+    }
+  }
+
+  .post--description {
+    padding: 0 1.5rem;
+    margin-bottom: 1rem;
+    text-align: justify;
+  }
+
+  .post--media {
+    margin-bottom: 1rem;
+    img {
+      width: 100%;
+    }
+  }
+
+  .post--reaction {
+    padding: 1rem;
+    display: flex;
+    padding-bottom: 1rem;
+    justify-content: space-between;
+    span {
+      color: $orangeD;
+    }
+
+    .reaction--like {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .reaction--comments {
+    }
+  }
+
+  .post--comments-cover {
+    .post--comment-input {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+
+      textarea {
+        width: 100%;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: $primary-bg;
+        color: $grayL;
+        &:focus {
+          border: none;
+          outline: none;
+        }
+      }
+
+      .comment--send-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: green;
+        border: 1px solid $primary-bg;
+        padding: 0.5rem 0.7rem;
+        border-radius: 5px;
+        cursor: pointer;
+        &:hover {
+          color: greenyellow;
+        }
+      }
+    }
+
+    .post--comments {
+      padding: 0 1.2rem;
+      display: flex;
+      gap: 10px;
+      //   align-items: center;
+      //   justify-content: center;
+
+      p {
+        background-color: $primary-bg;
+        padding: 0.5rem 0.5rem 0.5rem 1rem;
+        border-radius: 15px;
+        width: 75%;
+        text-align: justify;
+      }
+    }
+  }
+}

@@ -133,7 +133,6 @@ body.open .navbar-menu {
   .account--popup {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     background-color: $grayL-trans;
     color: white;
     border-radius: 7px;
@@ -142,8 +141,33 @@ body.open .navbar-menu {
     top: 60px;
     z-index: 2;
     width: 250px;
-    min-height: 250px;
-    padding: 0.5rem;
+    min-height: 340px;
+    padding: 1rem;
+    color: $grayD;
+
+    .account--info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      .image--logo {
+        width: 70px;
+      }
+      p {
+        margin: 0;
+        padding: 0;
+        font-size: 0.8rem;
+        line-height: 1.3;
+      }
+    }
+
+    .btn-danger {
+      border-bottom: 1px solid $grayD;
+      text-align: left;
+      padding: 1rem 0;
+      cursor: pointer;
+      &:hover {
+        color: $orangeD;
+      }
+    }
 
     .account--close-btn {
       box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px,
@@ -156,6 +180,15 @@ body.open .navbar-menu {
       right: 10px;
       font-weight: 800;
       width: 20%;
+      &:hover {
+        box-shadow: rgba(75, 4, 4, 0.16) 0px 1px 4px,
+          rgb(87, 4, 4) 0px 0px 0px 3px;
+      }
+    }
+
+    .list-group-item {
+      background-color: $grayD;
+      border: none;
     }
   }
 }

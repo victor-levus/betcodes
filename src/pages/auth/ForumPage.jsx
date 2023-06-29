@@ -6,6 +6,7 @@ import authService from "../../services/authService";
 import Loading from "../../components/Loading";
 import PosterCard from "../../components/chakra/PosterCard";
 import ExpiredSessionAlert from "../../components/ExpiredSessionAlert";
+import PostCard from "../../components/PostCard";
 
 const ForumPage = () => {
   const [user, setUser] = useState();
@@ -58,15 +59,7 @@ const ForumPage = () => {
       return sortData
         .sort((a, b) => (a.placed_at > b.placed_at ? -1 : 1))
         .map((item) => {
-          return (
-            <h6
-              style={{ borderBottom: "1px dashed gray", textAlign: "justify" }}
-              className="pb-3 pt-2"
-              key={item.id}
-            >
-              {item.description}
-            </h6>
-          );
+          return <PostCard post={item} key={item.id} />;
         });
     }
   };
