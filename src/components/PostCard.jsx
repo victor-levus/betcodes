@@ -2,65 +2,87 @@ import React from "react";
 
 import ImageLogo from "../asserts/profile pics.png";
 import { MdComment, MdSend, MdThumbUp } from "react-icons/md";
+import moment from "moment/moment";
+import CommentCard from "./CommentCard";
+import { deletePost } from "../services/postServices";
 
-const PostCard = ({ post, postuser, user }) => {
+const PostCard = ({ post }) => {
+  const handleEditPost = async () => {};
+  const handleDeletePost = async () => {
+    const confirm = window.confirm("Are you sure to Delete");
+
+    if (confirm) {
+      try {
+        const result = await deletePost(post.id);
+        if (result) {
+          console.log(result);
+        }
+      } catch (error) {}
+    }
+    return null;
+  };
+
+  const toggleCommentsCollapse = (e) => {
+    const element = e.target.nextElementSibling;
+    element.classList.toggle("open--reply");
+  };
   return (
     <div>
       {post && (
         <div className="post--card-cover">
           <div className="profile--info">
             <img src={ImageLogo} alt="" />
-            <a href="#">{post.user}</a>
+            <div className="profile--name">
+              <a href="#">{post.user}</a>
+              <p>{moment(post.placed_at).format("MMM Do YY, HH:mm")}</p>
+            </div>
           </div>
 
           <div className="post--description">
             <p>{post.description}</p>
           </div>
 
-          <div className="post--media">
+          {/* <div className="post--media">
             <hr />
             <img
               src="https://www.shutterstock.com/image-photo/man-who-rejoices-stadium-winning-260nw-1416620072.jpg"
               alt=""
             />
             <p>{post.media}</p>
-          </div>
+          </div> */}
+
+          <hr className="my-0" />
 
           <div className="post--reaction">
             <a href="#" className="reaction--like">
-              <span>520</span> <MdThumbUp />
+              <span className="count--">520</span> <MdThumbUp />
             </a>
 
-            <a href="#" className="reaction--comments">
-              <span>38</span> <MdComment />
-            </a>
+            <p>
+              <span onClick={handleEditPost} className="btn--action me-2">
+                Edit
+              </span>
+              <span className="btn--action" onClick={handleDeletePost}>
+                Delete
+              </span>
+            </p>
+
+            <span className="">
+              <span className="count-- pe-1">{post.comments.length}</span>
+              <MdComment />
+            </span>
           </div>
 
-          <hr />
+          <span
+            onClick={toggleCommentsCollapse}
+            className="reaction--comments count-- ms-3"
+          >
+            Comments
+          </span>
 
-          <div className="post--comments-cover">
-            <div className="post--comment-input">
-              <img className="post--user-image" src={ImageLogo} alt="" />
-              <textarea
-                name="comment-description"
-                id="comment-description"
-                cols=""
-                rows="1"
-                placeholder="Write a public comment..."
-              ></textarea>
-              <div className="comment--send-btn">
-                <MdSend />
-              </div>
-            </div>
-
-            <div className="post--comments">
-              <img className="post--user-image" src={ImageLogo} alt="" />
-              <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut
-                velit distinctio odio ea, sit minima voluptates ullam labore
-                dicta officia vero, autem suscipit veritatis quisquam.
-              </p>
-            </div>
+          <div className="comments--collapse-cover">
+            <hr className="my-2" />
+            <CommentCard post={post} />
           </div>
         </div>
       )}

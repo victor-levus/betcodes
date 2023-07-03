@@ -2,8 +2,11 @@
 .post--card-cover {
   background-color: $secondary-bg;
   padding-bottom: 1rem;
-  border-radius: 15px;
+  border-radius: 5px;
   margin-bottom: 2rem;
+  position: relative;
+  // max-height: 450px;
+  // overflow-y: hidden;
 
   .post--user-image {
     width: 50px;
@@ -29,6 +32,10 @@
         color: $orangeD;
       }
     }
+
+    p {
+      font-size: 12px;
+    }
   }
 
   .post--description {
@@ -49,8 +56,16 @@
     display: flex;
     padding-bottom: 1rem;
     justify-content: space-between;
-    span {
+    .count-- {
       color: $orangeD;
+    }
+
+    .btn--action {
+      cursor: pointer;
+
+      &:hover {
+        color: $orangeD;
+      }
     }
 
     .reaction--like {
@@ -58,60 +73,110 @@
       align-items: center;
       gap: 5px;
     }
-    .reaction--comments {
+  }
+
+  .reaction--comments {
+    cursor: pointer;
+    bottom: 3px;
+  }
+
+  .comments--collapse-cover {
+    // display: none;
+    opacity: 0;
+    // visibility: hidden;
+    overflow: hidden;
+    height: 0;
+    transition: all 0.4s ease-in-out;
+    .post--comments-cover {
+      .post--comment-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+
+        textarea {
+          width: 100%;
+          border-radius: 25px;
+          padding: 0.5rem 1rem;
+          border: none;
+          background-color: $primary-bg;
+          color: $grayL;
+          &:focus {
+            border: none;
+            outline: none;
+          }
+        }
+
+        .comment--send-btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: green;
+          border: 1px solid $primary-bg;
+          padding: 0.5rem 0.7rem;
+          border-radius: 5px;
+          &:hover {
+            color: greenyellow;
+          }
+        }
+      }
+
+      .comments--cover {
+        .post--comment {
+          margin-bottom: 1rem;
+          padding: 0 1.2rem;
+          display: flex;
+          gap: 5px;
+          //   align-items: center;
+          //   justify-content: center;
+
+          .comment--box {
+            background-color: $primary-bg;
+            padding: 0.5rem 0.5rem 0.5rem 1rem;
+            border-radius: 15px;
+            width: 85%;
+            text-align: justify;
+
+            .comment-head {
+              display: flex;
+              justify-content: space-between;
+              .comment--user {
+                color: $orangeD;
+                font-size: 14px;
+                font-weight: 500;
+                text-transform: capitalize;
+              }
+              .comment--time {
+                font-size: 11px;
+                padding-right: 0.3rem;
+              }
+            }
+
+            p {
+              margin: 0;
+            }
+          }
+        }
+
+        .reply--cover {
+          width: 75%;
+          margin-left: 5rem;
+          display: none;
+          .comment--box {
+          }
+        }
+
+        .open--reply {
+          display: block;
+        }
+      }
     }
   }
 
-  .post--comments-cover {
-    .post--comment-input {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 1rem;
-      padding: 0.5rem;
-
-      textarea {
-        width: 100%;
-        border-radius: 25px;
-        padding: 0.5rem 1rem;
-        border: none;
-        background-color: $primary-bg;
-        color: $grayL;
-        &:focus {
-          border: none;
-          outline: none;
-        }
-      }
-
-      .comment--send-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: green;
-        border: 1px solid $primary-bg;
-        padding: 0.5rem 0.7rem;
-        border-radius: 5px;
-        cursor: pointer;
-        &:hover {
-          color: greenyellow;
-        }
-      }
-    }
-
-    .post--comments {
-      padding: 0 1.2rem;
-      display: flex;
-      gap: 10px;
-      //   align-items: center;
-      //   justify-content: center;
-
-      p {
-        background-color: $primary-bg;
-        padding: 0.5rem 0.5rem 0.5rem 1rem;
-        border-radius: 15px;
-        width: 75%;
-        text-align: justify;
-      }
-    }
+  .open--reply {
+    height: auto;
+    visibility: visible;
+    opacity: 1;
   }
 }

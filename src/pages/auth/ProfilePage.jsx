@@ -118,7 +118,10 @@ const ProfilePage = () => {
                       <>
                         <h2>Name: {`${user.first_name} ${user.last_name}`}</h2>
                         <h4>Email: {user.email}</h4>
-                        <h4>Membership: {"Regular"}</h4>
+                        <h4>
+                          Membership:{" "}
+                          {user.is_staff ? "Administrator" : "Regular"}
+                        </h4>
                       </>
                     )}
                   </div>
