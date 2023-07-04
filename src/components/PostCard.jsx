@@ -44,8 +44,8 @@ const PostCard = ({ post }) => {
 
           {/* <div className="post--media">
             <hr />
-            <img
-              src="https://www.shutterstock.com/image-photo/man-who-rejoices-stadium-winning-260nw-1416620072.jpg"
+            {/* <img
+              // src="https://www.shutterstock.com/image-photo/man-who-rejoices-stadium-winning-260nw-1416620072.jpg"
               alt=""
             />
             <p>{post.media}</p>
