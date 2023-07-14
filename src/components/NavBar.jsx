@@ -7,7 +7,6 @@ import {
   MdMenu,
   MdPeople,
   MdPerson,
-  MdPerson2,
   MdPerson3,
 } from "react-icons/md";
 import useComponentVisible from "../hooks/useComponentVisible";
@@ -15,8 +14,6 @@ import Modal from "./Modal";
 import LoginForm from "./forms/LoginForm";
 import SignUpForm from "./forms/SignUpForm";
 import authService from "../services/authService";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { register } from "../services/userService";
 import ImageLogo from "../asserts/profile pics.png";
 
@@ -25,7 +22,6 @@ const NavBar = () => {
   const [formData, setFormData] = useState({});
   const [user, setUser] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
@@ -167,7 +163,7 @@ const NavBar = () => {
           {user ? (
             <div className="">
               <div className="account--info">
-                <img className="image--logo" src={ImageLogo} alt="image-logo" />
+                <img className="image--logo" src={ImageLogo} alt="user-logo" />
                 <p>
                   {user.first_name} {user.last_name}
                 </p>

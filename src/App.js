@@ -7,11 +7,10 @@ import router from "./routes";
 import { AppContext } from "./context/ProductContext";
 import { getBets } from "./services/betsService";
 import "./App.scss";
-import authService from "./services/authService";
 
 function App() {
   const [betData, setBetData] = useState("");
-  const [betCodeData, setBetCodeData] = useState([]);
+  // const [betCodeData, setBetCodeData] = useState([]);
 
   useEffect(() => {
     getData();
@@ -28,7 +27,7 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <AppContext.Provider value={{ betData, betCodeData }}>
+      <AppContext.Provider value={{ betData }}>
         <RouterProvider router={router} />
       </AppContext.Provider>
     </>

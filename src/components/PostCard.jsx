@@ -1,7 +1,7 @@
 import React from "react";
 
 import ImageLogo from "../asserts/profile pics.png";
-import { MdComment, MdSend, MdThumbUp } from "react-icons/md";
+import { MdComment, MdThumbUp } from "react-icons/md";
 import moment from "moment/moment";
 import CommentCard from "./CommentCard";
 import { deletePost } from "../services/postServices";
