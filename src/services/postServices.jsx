@@ -77,6 +77,7 @@ export function savePost(post) {
 }
 
 export function saveComment(postId, comment) {
+  console.log(postId + " " + comment);
   try {
     if (comment._id) {
       const body = { ...comment };

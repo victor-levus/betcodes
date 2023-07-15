@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import ImageLogo from "../asserts/profile pics.png";
 import { MdComment, MdThumbUp } from "react-icons/md";
 import moment from "moment/moment";
 import CommentCard from "./CommentCard";
 import { deletePost } from "../services/postServices";
+import authService from "../services/authService";
 
 const PostCard = ({ post }) => {
+  const [user, setUser] = useState();
+  useEffect(() => {
+    currentUser();
+  }, []);
+
+  const currentUser = async () => {
+    const user = await authService.getCurrentUser();
+    setUser(user);
+  };
+
   const handleEditPost = async () => {};
+
   const handleDeletePost = async () => {
     const confirm = window.confirm("Are you sure to Delete");
 
@@ -26,6 +38,7 @@ const PostCard = ({ post }) => {
     const element = e.target.nextElementSibling;
     element.classList.toggle("open--reply");
   };
+
   return (
     <div>
       {post && (
@@ -55,17 +68,21 @@ const PostCard = ({ post }) => {
 
           <div className="post--reaction">
             <a href="#" className="reaction--like">
-              <span className="count--">520</span> <MdThumbUp />
+              <span className="count--"></span> <MdThumbUp />
             </a>
 
-            <p>
-              <span onClick={handleEditPost} className="btn--action me-2">
-                Edit
-              </span>
-              <span className="btn--action" onClick={handleDeletePost}>
-                Delete
-              </span>
-            </p>
+            {!user
+              ? null
+              : post.user === user.username && (
+                  <p>
+                    {/* <span onClick={handleEditPost} className="btn--action me-2">
+                      Edit
+                    </span> */}
+                    <span className="btn--action" onClick={handleDeletePost}>
+                      Delete
+                    </span>
+                  </p>
+                )}
 
             <span className="">
               <span className="count-- pe-1">{post.comments.length}</span>
