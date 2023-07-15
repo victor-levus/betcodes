@@ -1,10 +1,9 @@
 import http from "./httpService";
-import config from "../config.json";
 import { toast } from "react-toastify";
 
-const apiAuth = config.apiBetEndpoint + "/auth/jwt/create";
-const apiVerifyToken = config.apiBetEndpoint + "/auth/jwt/verify";
-const apiUser = config.apiBetEndpoint + "/auth/users/me";
+const apiAuth = http.getApiEndPoint() + "/auth/jwt/create";
+const apiVerifyToken = http.getApiEndPoint() + "/auth/jwt/verify";
+const apiUser = http.getApiEndPoint() + "/auth/users/me";
 const tokenKey = "token";
 const refreshKey = "refresh";
 

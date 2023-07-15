@@ -1,8 +1,7 @@
 import http from "./httpService";
-import config from "../config.json";
 
-const apiBets = config.apiBetEndpoint + "/betcodes/bets";
-const apiBookCodeInfo = config.apiBetEndpoint + "/betcodes/bookcodeinfo";
+const apiBets = http.getApiEndPoint() + "/betcodes/bets";
+const apiBookCodeInfo = http.getApiEndPoint() + "/betcodes/bookcodeinfo";
 
 function betUrl(id) {
   return `${apiBets}/${id}`;

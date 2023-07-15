@@ -1,8 +1,7 @@
 import http from "./httpService";
-import config from "../config.json";
 import { toast } from "react-toastify";
 
-const apiUsers = config.apiBetEndpoint + "/auth/users/";
+const apiUsers = http.getApiEndPoint() + "/auth/users/";
 
 export async function register(formData) {
   try {

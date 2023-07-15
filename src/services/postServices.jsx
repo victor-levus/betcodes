@@ -1,10 +1,9 @@
 import http from "./httpService";
-import config from "../config.json";
 import { toast } from "react-toastify";
 import authService from "./authService";
 
-const apiPosts = config.apiBetEndpoint + "/betcodes/posts/";
-const apiMyPosts = config.apiBetEndpoint + "/betcodes/profileposts/";
+const apiPosts = http.getApiEndPoint() + "/betcodes/posts/";
+const apiMyPosts = http.getApiEndPoint() + "/betcodes/profileposts/";
 
 function postUrl(id) {
   return `${apiPosts}${id}`;
@@ -78,6 +77,7 @@ export function savePost(post) {
 }
 
 export function saveComment(postId, comment) {
+  console.log(postId + " " + comment);
   try {
     if (comment._id) {
       const body = { ...comment };

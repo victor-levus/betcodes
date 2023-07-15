@@ -23,6 +23,13 @@ button {
   box-sizing: border-box;
 }
 
+.navbar-brand1 {
+  // font-family: "Great Vibes", cursive;
+  font-family: "Oleo Script", cursive;
+  color: $orangeD;
+  font-size: 1.8rem;
+}
+
 @media only screen and (min-width: 600px) {
   .navbar {
     justify-content: space-between;

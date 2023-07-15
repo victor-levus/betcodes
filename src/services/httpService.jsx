@@ -18,6 +18,12 @@ function setJwtHeader(jwt) {
   axios.defaults.headers["Authorization"] = `${"JWT"} ${jwt}`;
 }
 
+function getApiEndPoint() {
+  return process.env.NODE_ENV === "production"
+    ? process.env.REACT_APP_PROD_ENDPOINT
+    : process.env.REACT_APP_DEV_ENDPOINT;
+}
+
 // eslint-disable-next-line
 export default {
   get: axios.get,
@@ -26,4 +32,5 @@ export default {
   patch: axios.patch,
   delete: axios.delete,
   setJwtHeader,
+  getApiEndPoint,
 };
