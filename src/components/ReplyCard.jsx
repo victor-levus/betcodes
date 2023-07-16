@@ -47,7 +47,8 @@ const ReplyCard = ({ comment = {} }) => {
   };
 
   const handleSubmitReply = async () => {
-    const replyForm = document.getElementById("reply-description");
+    const replyForm = document.getElementById("reply-description" + comment.id);
+    console.log(replyForm);
     try {
       const result = await saveReply(comment.post, comment.id, {
         description: description,
@@ -67,14 +68,15 @@ const ReplyCard = ({ comment = {} }) => {
     }
   };
 
+  // console.log(comment);
   return (
     <>
       <div className="post--comments-cover reply---cover">
         <div className="post--comment-input">
           <img className="post--user-image" src={ImageLogo} alt="" />
           <textarea
-            name="comment-description"
-            id="reply-description"
+            name={`reply-description${comment.id}`}
+            id={`reply-description${comment.id}`}
             cols=""
             rows="1"
             onChange={handleChange}
