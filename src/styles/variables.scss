@@ -1,0 +1,20 @@
+$primary-bg: #0b0b0b;
+$secondary-bg: #181818;
+$hover-bg: #333333;
+$orangeD: #f27405;
+$orangeL: #ff8a00;
+$greenD: #0f5036;
+$violet: #690bae;
+$grayD: rgb(131, 129, 129);
+$grayL: rgb(189, 189, 189);
+$grayL-trans: rgba(15, 15, 15, 0.849);
+$danger: #dc3545;
+
+:export {
+  primaryBG: $primary-bg;
+  secondaryBG: $secondary-bg;
+}
+
+.active {
+  display: none;
+}
