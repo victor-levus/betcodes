@@ -1,11 +1,8 @@
-var searchSuggestionList = document.getElementById("root");
-
-console.log(searchSuggestionList);
-
 document.addEventListener("mouseup", function (e) {
-  var container = document.getElementById("searchBox");
-  var container2 = document.getElementById("searchSuggestionBox");
-  if (!container?.contains(e.target)) {
-    container2?.classList.add("hidden");
+  const container = document.getElementById("menu--3dots");
+  const container3 = document.getElementById("menu--list-box");
+
+  if (!container3?.contains(e.target) && !container?.contains(e.target)) {
+    container3?.classList.add("hidden");
   }
 });

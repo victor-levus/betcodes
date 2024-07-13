@@ -2,7 +2,9 @@ import { Button, Flex } from "@radix-ui/themes";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewPost } from "../../store/slices/postSlice";
-import { selectUser } from "../../store/slices/userSlice";
+import { fetchUser, selectUser } from "../../store/slices/userSlice";
+import { loginWithToken } from "../auth/auth";
+import { toast } from "react-toastify";
 
 const TextArea = () => {
   const dispatch = useDispatch();
@@ -13,9 +15,21 @@ const TextArea = () => {
     setPostInput(e.target.value);
   };
 
-  const handlePostSubmit = () => {
-    console.log("post submitted");
-    dispatch(addNewPost({ description: postInput, user: user.id }));
+  const handlePostSubmit = async () => {
+    const session = await loginWithToken();
+
+    if (session) {
+      try {
+        dispatch(fetchUser());
+        dispatch(addNewPost({ description: postInput, user: user.id }));
+        setPostInput("");
+      } catch (error) {
+        console.log("couldnt submit post");
+      }
+    } else {
+      dispatch(fetchUser());
+      toast.error("Your Login session has expired, Please Login again");
+    }
   };
 
   return (
@@ -24,6 +38,7 @@ const TextArea = () => {
         placeholder="Post anything"
         className="w-full outline-0 h-36 p-2 bg--dark"
         onChange={handleInputChange}
+        value={postInput}
       />
 
       <Flex justify="end">

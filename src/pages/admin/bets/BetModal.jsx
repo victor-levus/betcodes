@@ -1,0 +1,248 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AlertDialog,
+  Box,
+  Button,
+  Dialog,
+  Flex,
+  Separator,
+  Text,
+  TextField,
+} from "@radix-ui/themes";
+import axios from "axios";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+
+import ErrorMessage from "../../../components/ErrorMessage";
+import SelectInput from "../../../components/SelectInput";
+import { betSchema } from "../../../validationSchema";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addNewBet,
+  getaddBetError,
+  getaddBetStatus,
+} from "../../../store/slices/betsSlice";
+import AppSpinner from "../../../components/AppSpinner";
+
+const BetModal = () => {
+  const dispatch = useDispatch();
+  const addBetStatus = useSelector(getaddBetStatus);
+  const addBetError = useSelector(getaddBetError);
+
+  const [error, setError] = useState("");
+  const [open, setOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(betSchema),
+  });
+
+  const selectOptions = [
+    { label: "Success", value: "SUCCESS" },
+    { label: "In Progress", value: "IN_PROGRESS" },
+    { label: "Lost", value: "LOST" },
+  ];
+
+  const submitForm = handleSubmit(async (data) => {
+    const betFormData = Object.entries(data).reduce(
+      (a, [k, v]) => (v === "" ? a : ((a[k] = v), a)),
+      {}
+    );
+
+    const { error, meta } = await dispatch(addNewBet(betFormData));
+
+    if (error) {
+      setError(error?.message);
+      return;
+    }
+
+    if (meta?.requestStatus === "fulfilled") {
+      toast.success("Bet added successful");
+
+      reset();
+      setOpen(false);
+    }
+  });
+
+  return (
+    <>
+      <AlertDialog.Root open={error}>
+        <AlertDialog.Content>
+          <AlertDialog.Title>Error</AlertDialog.Title>
+          <AlertDialog.Description>
+            The operation was not successful.
+            <Text className="block">Error: {addBetError}</Text>
+          </AlertDialog.Description>
+          <Flex mt={"4"} justify={"between"}>
+            <Button
+              className="bg-none"
+              onClick={() => setError(false)}
+              //   variant="soft"
+            >
+              Ok
+            </Button>
+          </Flex>
+        </AlertDialog.Content>
+      </AlertDialog.Root>
+
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Trigger>
+          <Button variant="outline">Add Bet</Button>
+        </Dialog.Trigger>
+
+        <Dialog.Content>
+          <Dialog.Title>Add Bet</Dialog.Title>
+
+          <form onSubmit={submitForm}>
+            <Flex direction="column" gap="5">
+              <Flex gap={"3"} direction={{ initial: "column", md: "row" }}>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Home Team
+                  </Text>
+                  <TextField.Root
+                    defaultValue=""
+                    placeholder=""
+                    {...register("home_team")}
+                  />
+                  <ErrorMessage> {errors.home_team?.message}</ErrorMessage>
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Away Team
+                  </Text>
+                  <TextField.Root
+                    defaultValue=""
+                    placeholder=""
+                    {...register("away_team")}
+                  />
+                  <ErrorMessage> {errors.away_team?.message}</ErrorMessage>
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Bet Event
+                  </Text>
+                  <TextField.Root
+                    defaultValue=""
+                    placeholder=""
+                    {...register("bet")}
+                  />
+                  <ErrorMessage> {errors.bet?.message}</ErrorMessage>
+                </label>
+              </Flex>
+
+              <Flex gap={"3"} direction={{ initial: "column", md: "row" }}>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Odd
+                  </Text>
+                  <TextField.Root
+                    type="number"
+                    step=".01"
+                    {...register("odd")}
+                  />
+                  <ErrorMessage> {errors.odd?.message}</ErrorMessage>
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Match Time
+                  </Text>
+                  <TextField.Root
+                    type="datetime-local"
+                    {...register("match_time")}
+                  />
+                  <ErrorMessage> {errors.match_time?.message}</ErrorMessage>
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    Bet Status
+                  </Text>
+
+                  <SelectInput
+                    selectOptions={selectOptions}
+                    defaultValue={"IN_PROGRESS"}
+                    register={register("bet_status")}
+                  />
+
+                  <ErrorMessage> {errors.bet_status?.message}</ErrorMessage>
+                </label>
+              </Flex>
+
+              <Separator color="gray" size="4" my={"3"} />
+
+              <Flex gap={"3"} direction={{ initial: "column", md: "row" }}>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    HT Score Home
+                  </Text>
+                  <TextField.Root
+                    type="number"
+                    {...register("ht_home_score")}
+                  />
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    HT Score Away
+                  </Text>
+                  <TextField.Root
+                    type="number"
+                    {...register("ht_away_score")}
+                  />
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    FT Score Home
+                  </Text>
+                  <TextField.Root
+                    type="number"
+                    {...register("ft_home_score")}
+                  />
+                </label>
+                <label>
+                  <Text as="div" size="2" mb="1">
+                    FT Score Away
+                  </Text>
+                  <TextField.Root
+                    type="number"
+                    {...register("ft_away_score")}
+                  />
+                </label>
+              </Flex>
+            </Flex>
+
+            <Flex gap="3" mt="5" justify="end">
+              <Dialog.Close>
+                <Button variant="outline" color="gray" onClick={() => reset()}>
+                  Cancel
+                </Button>
+              </Dialog.Close>
+              {/* <Dialog.Close>
+                <Button type="submit">Save</Button>
+              </Dialog.Close> */}
+
+              <Button
+                disabled={addBetStatus === "loading"}
+                variant="outline"
+                type="submit"
+                className="w-[75px]"
+              >
+                {addBetStatus === "loading" ? (
+                  <>Save {<AppSpinner size={1} />}</>
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </Flex>
+          </form>
+        </Dialog.Content>
+      </Dialog.Root>
+    </>
+  );
+};
+
+export default BetModal;

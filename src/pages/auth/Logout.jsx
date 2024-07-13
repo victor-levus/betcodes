@@ -1,18 +1,26 @@
 import { Box, Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { removeHeader } from "./auth";
+import { toast } from "react-toastify";
+import { fetchUser } from "../../store/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleNotLogout = () => {
     navigate(-1);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    removeHeader();
     localStorage.removeItem("token");
     localStorage.removeItem("refresh");
+    toast.success("Logout Succeeded");
 
+    dispatch(fetchUser());
     navigate("/");
   };
 

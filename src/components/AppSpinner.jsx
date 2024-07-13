@@ -1,10 +1,10 @@
 import { Flex, Spinner } from "@radix-ui/themes";
 import React from "react";
 
-const AppSpinner = () => {
+const AppSpinner = ({ size = 3 }) => {
   return (
     <Flex justify="center">
-      <Spinner size="3" />
+      <Spinner size={size} />
     </Flex>
   );
 };

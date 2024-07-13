@@ -6,8 +6,11 @@ import { FaBlog } from "react-icons/fa";
 import { RiHome7Line } from "react-icons/ri";
 import { useSelector } from "react-redux";
 import { selectUser } from "../store/slices/userSlice";
+import useScript from "../hooks/useScript";
+import { DashboardIcon } from "@radix-ui/react-icons";
 
 const NavBar = () => {
+  useScript("/vanilla.js");
   const user = useSelector(selectUser);
 
   const menuList = [
@@ -25,6 +28,14 @@ const NavBar = () => {
           to: "/auth",
           icon: <TbLogin2 size={"20"} color="gray" />,
         },
+
+    user.is_staff
+      ? {
+          name: "Admin",
+          to: "/dashboard",
+          icon: <DashboardIcon size={"20"} color="gray" />,
+        }
+      : "",
   ];
 
   const toggleMenuListBox = () => {
@@ -34,7 +45,7 @@ const NavBar = () => {
       ? menuListBox.classList.remove("hidden")
       : menuListBox?.classList.add("hidden");
 
-    menuListBox?.focus();
+    // menuListBox?.focus();
   };
 
   return (
@@ -53,7 +64,8 @@ const NavBar = () => {
           />
         </a>
 
-        <span
+        <Link
+          to="/"
           className="text-2xl"
           style={{
             color: "var(--accent-9)",
@@ -63,16 +75,16 @@ const NavBar = () => {
           }}
         >
           BetCodes
-        </span>
+        </Link>
       </Flex>
 
-      <Flex gap={"3"} align={"center"}>
+      <Flex id="menu--3dots" gap={"3"} align={"center"}>
         {user.id && <Text color="gray">{`Welcome ${user?.first_name}`}</Text>}
         <TbGridDots
           size={"30"}
           className="cursor-pointer"
           color="gray"
-          // onClick={toggleMenuListBox}
+          onClick={toggleMenuListBox}
         />
       </Flex>
 
@@ -80,28 +92,32 @@ const NavBar = () => {
         id="menu--list-box"
         justify={"between"}
         gap={"3"}
-        width={"300px"}
+        // width={"300px"}
         className="bg--darkT absolute right-0 top-14 z-10 py-4 px-3 rounded-xl overflow-y-scroll hidden"
       >
         <Flex gap={"3"} wrap={"wrap"}>
           {menuList.map((ml, i) => (
-            <Link key={i} to={ml.to}>
-              <Flex
-                onClick={toggleMenuListBox}
-                direction={"column"}
-                align={"center"}
-                gap={"2"}
-                justify={"center"}
-                className="bg-amber-950 bg-opacity-60 p-2 rounded-lg w-14 h-16 cursor-pointer hover:bg-amber-900 transition-all "
-              >
-                <Box className="ml-[-5px] ">{ml.icon}</Box>
-                <Button type="button">
-                  <Text as="p" className="text-stone-400 ">
-                    {ml.name}
-                  </Text>
-                </Button>
-              </Flex>
-            </Link>
+            <Box key={i}>
+              {ml.name && (
+                <Link to={ml.to}>
+                  <Flex
+                    onClick={toggleMenuListBox}
+                    direction={"column"}
+                    align={"center"}
+                    gap={"2"}
+                    justify={"center"}
+                    className="bg-amber-950 bg-opacity-60 p-2 rounded-lg w-14 h-16 cursor-pointer hover:bg-amber-900 transition-all "
+                  >
+                    <Box className="ml-[-5px] ">{ml.icon}</Box>
+                    <Button type="button">
+                      <Text as="p" className="text-stone-400 ">
+                        {ml.name}
+                      </Text>
+                    </Button>
+                  </Flex>
+                </Link>
+              )}
+            </Box>
           ))}
         </Flex>
       </Flex>

@@ -18,7 +18,7 @@ const Home = () => {
 
         <Fixtures bets={bets} />
 
-        {/* <BlogPage /> */}
+        <BlogPage />
       </Grid>
     </>
   );

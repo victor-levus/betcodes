@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASEURL } from "../../pages/auth/auth";
 
-export const BASE_URL = "http://localhost:8000/api/betcodes/posts/";
+export const BASE_URL = BASEURL + "betcodes/posts/";
 
 const initialState = {
   data: [],
   status: "idle", //'idle' | 'loading' | 'succeeded' | 'failed'
-  error: undefined,
+  error: null,
+  addPostStatus: "idle", //'idle' | 'loading' | 'succeeded' | 'failed'
+  addPostError: null,
 };
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
@@ -56,8 +59,17 @@ const postSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+
+      .addCase(addNewPost.pending, (state, action) => {
+        state.addPostStatus = "loading";
+      })
       .addCase(addNewPost.fulfilled, (state, action) => {
+        state.addPostStatus = "succeeded";
         state.data.push(action.payload);
+      })
+      .addCase(addNewPost.rejected, (state, action) => {
+        state.addPostStatus = "failed";
+        state.addPostError = action.error.message;
       });
   },
 });
@@ -66,6 +78,8 @@ const postSlice = createSlice({
 export const selectAllPosts = (state) => state.posts.data;
 export const getPostStatus = (state) => state.posts.status;
 export const getPostError = (state) => state.posts.error;
+export const getAddPostStatus = (state) => state.posts.addPoststatus;
+export const getAddPostError = (state) => state.posts.addPostError;
 
 export const { postAdded } = postSlice.actions;
 
