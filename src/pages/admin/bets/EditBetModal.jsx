@@ -2,8 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import moment from "moment";
 import { toast } from "react-toastify";
 import {
@@ -21,20 +20,13 @@ import BetCard from "../../home/BetCard";
 import { betSchema } from "../../../validationSchema";
 import ErrorMessage from "../../../components/ErrorMessage";
 import SelectInput from "../../../components/SelectInput";
-import {
-  fetchBets,
-  getaddBetError,
-  getaddBetStatus,
-} from "../../../store/slices/betsSlice";
+import { fetchBets } from "../../../store/slices/betsSlice";
 import { BASEURL } from "../../auth/auth";
 
-const BASE_URL = BASEURL + "bets/";
+const BASE_URL = BASEURL + "betcodes/bets/";
 
 const EditBetModal = ({ betData, trigerType }) => {
   const dispatch = useDispatch();
-  const addBetStatus = useSelector(getaddBetStatus);
-  const addBetError = useSelector(getaddBetError);
-  const router = useNavigate();
   const [error, setError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -55,7 +47,6 @@ const EditBetModal = ({ betData, trigerType }) => {
   ];
 
   const submitForm = handleSubmit(async (data) => {
-    console.log(data);
     const betFormData = Object.entries(data).reduce(
       (a, [k, v]) => (v === "" ? a : ((a[k] = v), a)),
       {}
@@ -72,7 +63,7 @@ const EditBetModal = ({ betData, trigerType }) => {
 
     // if (meta.requestStatus === "fulfilled") {
     //   toast.success("Bet updated successful");
-    //   console.log(payload);
+    //
     //   reset();
     //   setOpen(false);
     // }
@@ -104,7 +95,7 @@ const EditBetModal = ({ betData, trigerType }) => {
 
       setIsDeleting(true);
 
-      await axios.delete(BASE_URL + betData.id + "/");
+      await axios.delete(BASE_URL + betData.id);
 
       toast.success("Bet deleted successful");
 

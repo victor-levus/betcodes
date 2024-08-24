@@ -6,6 +6,7 @@ import { Badge, Box, Flex, Heading, Tabs, Text } from "@radix-ui/themes";
 import Charts from "../../../components/Charts";
 
 const AppTabs = ({ allBets, success, lost, in_Progress, teamName }) => {
+  console.log(allBets);
   return (
     <Tabs.Root defaultValue="summary">
       <Box pt="1">

@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { Box, Flex, Heading, TextField } from "@radix-ui/themes";
+import { Box, Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
 import _ from "lodash";
+import moment from "moment-timezone";
+
 import AppTabs from "./Tabs";
 
 const SearchField = ({ betsData }) => {
@@ -9,6 +11,7 @@ const SearchField = ({ betsData }) => {
   const [searchDisplay, setSearchDisplay] = useState("hidden");
   const [teamList, setTeamList] = useState([]);
   const [search, setSearch] = useState();
+  const [winningFormData, setWinningFormData] = useState(null);
   const [teams, setTeams] = useState([]);
   const [teamName, setTeamName] = useState("");
 
@@ -53,10 +56,147 @@ const SearchField = ({ betsData }) => {
     );
   });
 
-  console.log(search);
-
   return (
     <>
+      {winningFormData && (
+        <Flex
+          justify="center"
+          align="center"
+          className={`${
+            winningFormData.bet_status === "SUCCESS"
+              ? "bg-green-800"
+              : winningFormData.bet_status === "LOST"
+              ? "bg-red-800"
+              : ""
+          } bg-opacity-10 absolute top-0 bottom-0 right-0 left-0 z-10`}
+        >
+          <Box
+            className={`${
+              winningFormData.bet_status === "SUCCESS"
+                ? "bg-emerald-950"
+                : winningFormData.bet_status === "LOST"
+                ? "bg-pink-950"
+                : ""
+            } bg-opacity-90 w-[650px] h-[550px]  relative px-5`}
+          >
+            <Button
+              variant="soft"
+              color={
+                winningFormData.bet_status === "SUCCESS"
+                  ? "green"
+                  : winningFormData.bet_status === "LOST"
+                  ? "red"
+                  : ""
+              }
+              onClick={() => setWinningFormData(null)}
+              className="absolute right-1 bottom-1"
+            >
+              Close
+            </Button>
+
+            <Flex
+              gap="4"
+              justify="between"
+              mt="9"
+              mb="4"
+              className={
+                winningFormData.bet_status === "SUCCESS"
+                  ? "bg-teal-900 py-2 rounded"
+                  : winningFormData.bet_status === "LOST"
+                  ? "bg-pink-900 py-2 rounded"
+                  : ""
+              }
+            >
+              <Heading size="6" className="text-right text-2xl w-[48%]">
+                {winningFormData.home_team}
+              </Heading>
+
+              <Heading size="6" className="text-center text-lg w-[4%]">
+                vs
+              </Heading>
+
+              <Heading size="6" className="text-left text-2xl w-[48%]">
+                {winningFormData.away_team}
+              </Heading>
+            </Flex>
+
+            {/* <hr className="mb-3" /> */}
+
+            <Flex
+              direction="column"
+              gap="3"
+              className="text-[var(--accent-9)] text-center "
+            >
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Bet Status :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {winningFormData.bet_status}
+                </Heading>
+              </Flex>
+
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Bet Event :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {winningFormData.bet}
+                </Heading>
+              </Flex>
+
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Odd :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {winningFormData.odd}
+                </Heading>
+              </Flex>
+
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Half Time Scores :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {winningFormData.ht_home_score} :{" "}
+                  {winningFormData.ht_away_score}
+                </Heading>
+              </Flex>
+
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Full Time Scores :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {winningFormData.ft_home_score} :{" "}
+                  {winningFormData.ft_away_score}
+                </Heading>
+              </Flex>
+
+              <Flex justify="center" gap="3">
+                <Heading className="w-[50%] text-right" size="2">
+                  Match Date :
+                </Heading>
+
+                <Heading size="2" className="w-[50%] text-left text-gray-300">
+                  {moment(winningFormData.match_time).format("DD MMM YYYY")},{" "}
+                  {""}
+                  {moment
+                    .tz(winningFormData.match_time, "Africa/Lagos")
+                    .format("HH:mm")}
+                </Heading>
+              </Flex>
+            </Flex>
+          </Box>
+        </Flex>
+      )}
+
       <Flex gap={"1"}>
         <TextField.Root
           size={"3"}
@@ -87,15 +227,6 @@ const SearchField = ({ betsData }) => {
             <MagnifyingGlassIcon height="16" width="16" />
           </TextField.Slot>
         </TextField.Root>
-
-        {/* <Flex
-          align={"center"}
-          justify={"center"}
-          className="bg-green-300 border-0 rounded-sm cursor-pointer"
-          width={"6"}
-        >
-          <PaperPlaneIcon color="green" height="16" width="16" />
-        </Flex> */}
       </Flex>
 
       <Box
@@ -120,7 +251,7 @@ const SearchField = ({ betsData }) => {
 
       {teamName && (
         <Box my={"5"}>
-          <Flex gap={"2"} align={"end"} justify={"between"} mb={"7"}>
+          <Flex gap={"2"} align={"end"} justify={"between"} mb={"3"}>
             <Heading color="gray" mb={"4"}>
               {teamName}
             </Heading>
@@ -131,6 +262,33 @@ const SearchField = ({ betsData }) => {
               alt=""
             /> */}
           </Flex>
+
+          <Box>
+            <Heading size="3" mb="2" color="gold">
+              Winning Form
+            </Heading>
+            <Flex gap="1" mb="6" wrap="wrap">
+              {allBets.map((b) => (
+                <Flex direction="column">
+                  <Box
+                    key={b.id}
+                    className="cursor-pointer"
+                    onClick={() => setWinningFormData(b)}
+                  >
+                    {b.bet_status === "SUCCESS" ? (
+                      <Text className="bg-green-500 px-2 text-black rounded-sm ">
+                        S
+                      </Text>
+                    ) : b.bet_status === "LOST" ? (
+                      <Text className="bg-red-500 px-2 text-black rounded-sm ">
+                        L
+                      </Text>
+                    ) : null}
+                  </Box>
+                </Flex>
+              ))}
+            </Flex>
+          </Box>
 
           <AppTabs
             allBets={allBets}

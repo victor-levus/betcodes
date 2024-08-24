@@ -19,7 +19,7 @@ const BetsPage = () => {
     : undefined;
 
   const page = parseInt(searchParams.get("page")) || 1;
-  const pageSize = 7;
+  const pageSize = 10;
 
   const betsData = _.filter(bets, function (o) {
     return filterStatus ? o.bet_status === filterStatus : o;

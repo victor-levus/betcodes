@@ -1,7 +1,13 @@
 import axios from "axios";
 
-export const BASEURL = "https://backendapiapp-f7e6af207af9.herokuapp.com/api/";
+export const BASEURL =
+  process.env.NODE_ENV === "production"
+    ? "https://backendapiapp-f7e6af207af9.herokuapp.com/api/"
+    : "http://127.0.0.1:8000/api/";
+
 const BASE_URL = BASEURL + "auth/";
+
+// console.log(process.env.NODE_ENV);
 
 const addHeader = (access_token) => {
   axios.defaults.headers.common["Authorization"] = `JWT ${access_token}`;
@@ -43,55 +49,23 @@ export const loginWithToken = async () => {
     try {
       const verifyToken = await axios.post(BASE_URL + "jwt/verify/", { token });
       addHeader(token);
-      console.log("token verified");
-      console.log(verifyToken);
       return true;
     } catch (error) {
-      console.log(error);
-      console.log("token not verified");
       try {
         const newToken = await axios.post(BASE_URL + "jwt/refresh/", {
           refresh,
         });
         addHeader(newToken.data.access);
         localStorage.setItem("token", newToken.data.access);
-        console.log("token refreshed");
-        console.log(newToken.data.access);
+
         return true;
       } catch (error) {
         removeHeader();
         localStorage.removeItem("token");
         localStorage.removeItem("refresh");
-        console.log("token not refresh/token expired");
-        console.log(error);
       }
     }
   } else {
     removeHeader();
-    console.log("no token in localstorage");
   }
-
-  // const token = localStorage.getItem("token");
-
-  // if (!token) {
-  //   console.log("no token");
-  //   return;
-  // }
-
-  // try {
-  //   const verifyToken = await axios.post(BASE_URL + "jwt/verify/", { token });
-  //   // addHeader(token);
-  //   return verifyToken;
-  // } catch (error) {
-  //   try {
-  //     const refresh = localStorage.getItem("refresh");
-  //     const refreshToken = await axios.post(BASE_URL + "jwt/refresh/", {
-  //       refresh,
-  //     });
-  //     localStorage.setItem("token", refreshToken.data.access);
-  //     getSession();
-  //   } catch (error) {
-  //     console.log("refresh token not valid");
-  //   }
-  // }
 };

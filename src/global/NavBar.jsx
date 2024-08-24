@@ -58,7 +58,7 @@ const NavBar = () => {
       <Flex align="center">
         <a href="/">
           <HiCubeTransparent
-            size={"50"}
+            size={"40"}
             className="cursor-pointer"
             color="var(--accent-9)"
           />

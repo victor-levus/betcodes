@@ -4,10 +4,18 @@ import { LiaComments } from "react-icons/lia";
 import { SlLike, SlDislike } from "react-icons/sl";
 import moment from "moment";
 import { useSelector } from "react-redux";
+
 import { selectUser } from "../../store/slices/userSlice";
+import logo from "../../media/logoProfile2.png";
 
 const CommentCard = ({ comments }) => {
   const user = useSelector(selectUser);
+
+  const addCommentBox = (replys) => {
+    console.log(replys);
+
+    return <h1>Here</h1>;
+  };
 
   return (
     <Flex gap="4" direction="column" px="5">
@@ -28,22 +36,17 @@ const CommentCard = ({ comments }) => {
       )}
 
       {/* List of comments */}
-      {comments?.map((comment) => (
+      {comments?.map((comment, i) => (
         <Box key={comment?.id} className="bg-black p-3 rounded-3xl">
           {/* User Profile info */}
           <Flex gap="3" align="center" mb="5">
-            <Avatar
-              size="3"
-              src="https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?&w=64&h=64&dpr=2&q=70&crop=focalpoint&fp-x=0.67&fp-y=0.5&fp-z=1.4&fit=crop"
-              radius="full"
-              fallback="T"
-            />
+            <Avatar size="3" src={logo} radius="full" fallback="T" />
             <Box>
               <Text as="div" size="2" weight="bold">
                 {comment?.user}
               </Text>
               <Text as="div" size="2" color="gray">
-                {moment(comment?.placed_at).format("lll")}
+                {moment(comment?.created_at).format("lll")}
               </Text>
             </Box>
           </Flex>
@@ -54,26 +57,39 @@ const CommentCard = ({ comments }) => {
             </Text>
             {/* reactions icons */}
             <Flex gap="5">
-              <Flex className="py-1" align="baseline" gap="2">
+              {/* <Flex className="py-1" align="baseline" gap="2">
                 <SlLike className="cursor-pointer" />
                 <span>55</span>
               </Flex>
               <Flex align="center" gap="2">
                 <SlDislike className="cursor-pointer" />
                 <span>12</span>
-              </Flex>
+              </Flex> */}
               <Button type="button">
                 <Flex
                   className="bg--1 px-3 py-1 rounded-md cursor-pointer"
                   align="center"
                   gap="2"
+                  onClick={() => {
+                    const element = document.getElementById(
+                      `addCommentBoxContainer/${comment.id}/${comment.user}`
+                    );
+
+                    comment.replies
+                      ? element.append("Good Day")
+                      : element?.classList.add("hidden");
+                  }}
                 >
                   <LiaComments />
-                  <span>12</span>
+                  <span> {comment?.replies?.length} </span>
                 </Flex>
               </Button>
             </Flex>
           </Box>
+
+          <Box
+            id={`addCommentBoxContainer/${comment.id}/${comment.user}`}
+          ></Box>
         </Box>
       ))}
     </Flex>

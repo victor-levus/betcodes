@@ -4,10 +4,14 @@ import _ from "lodash";
 
 import CarouselButton from "./CarouselButton";
 import BetCard from "./BetCard";
+import { useSelector } from "react-redux";
+import { getBetStatus } from "../../store/slices/betsSlice";
 // import Spinner from "./spinner";
 
 const Fixtures = ({ bets }) => {
-  const betCardRow = "h-[400px] md:flex-wrap md:overflow-x-hide scrollbar-hide";
+  const betStatus = useSelector(getBetStatus);
+  const betCardRow =
+    "md:h-[400px] md:flex-wrap md:overflow-x-hide scrollbar-hide";
 
   const fixtureDate = [
     {
@@ -49,11 +53,13 @@ const Fixtures = ({ bets }) => {
   ];
 
   const loopBets = (slideDate) => {
-    const filterBets = _.filter(bets, function (o) {
+    const betsData = _.orderBy(bets, ["match_time"], ["asc"]);
+
+    const filterBets = _.filter(betsData, function (o) {
       return moment(o.match_time).format("L") === slideDate;
     });
 
-    if (!filterBets) return <Spinner />;
+    if (betStatus === "loading") return <Spinner />;
 
     if (filterBets.length === 0)
       return (

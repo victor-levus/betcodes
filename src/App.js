@@ -4,12 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import "./App.scss";
 import { fetchBets, getBetStatus } from "./store/slices/betsSlice";
-import {
-  fetchUser,
-  fetchUsers,
-  getUsersStatus,
-  getUserStatus,
-} from "./store/slices/userSlice";
+import { fetchUser, fetchUsers } from "./store/slices/userSlice";
 import Home from "./pages/home/Home";
 import Layout from "./global/Layout";
 import AuthPage from "./pages/auth/AuthPage";
@@ -28,7 +23,6 @@ export default function App() {
   const dispatch = useDispatch();
   const betStatus = useSelector(getBetStatus);
   const postStatus = useSelector(getPostStatus);
-  const usersStatus = useSelector(getUsersStatus);
 
   useEffect(() => {
     if (betStatus === "idle") {
@@ -48,7 +42,6 @@ export default function App() {
 
   useEffect(() => {
     dispatch(fetchUsers());
-    console.log("running");
   }, [dispatch]);
 
   const getLoggedInUser = async () => {
@@ -57,7 +50,6 @@ export default function App() {
     if (session) {
       dispatch(fetchUser());
     } else {
-      console.log("Could not login");
     }
   };
 
