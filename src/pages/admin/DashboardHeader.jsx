@@ -34,7 +34,7 @@ const DashboardHeader = () => {
             variant="outline"
             color={path === "dashboard/teamanalysis" ? "orange" : "gray"}
           >
-            Teams Analysis
+            Team Analysis
           </Button>
         </Link>
 

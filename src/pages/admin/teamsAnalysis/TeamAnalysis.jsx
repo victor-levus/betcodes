@@ -16,8 +16,7 @@ const TeamsAnalysis = () => {
   // })];
 
   return (
-    <Box>
-      <Heading mb={"5"}>Teams Analysis</Heading>
+    <Box className="mt-9">
       <SearchField betsData={betsData} />
     </Box>
   );

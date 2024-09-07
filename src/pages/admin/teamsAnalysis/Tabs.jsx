@@ -6,7 +6,6 @@ import { Badge, Box, Flex, Heading, Tabs, Text } from "@radix-ui/themes";
 import Charts from "../../../components/Charts";
 
 const AppTabs = ({ allBets, success, lost, in_Progress, teamName }) => {
-  console.log(allBets);
   return (
     <Tabs.Root defaultValue="summary">
       <Box pt="1">
@@ -72,15 +71,7 @@ const AppTabs = ({ allBets, success, lost, in_Progress, teamName }) => {
 
           <Text size={"2"}>
             <div style={{ display: "flex", alignItems: "end" }}>
-              {/* <div style={{ position: "relative", width: "", height: "400px" }}>
-                <BetChart
-                  inProgress={in_Progress?.length}
-                  lost={lost?.length}
-                  success={success?.length}
-                />
-              </div> */}
-
-              <div style={{ position: "relative", minWidth: "350px" }}>
+              <div style={{ position: "relative", minWidth: "308px" }}>
                 <Charts
                   inProgress={in_Progress?.length}
                   lost={lost?.length}

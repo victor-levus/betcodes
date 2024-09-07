@@ -1,10 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import {
+  MdOutlineKeyboardArrowLeft,
+  MdOutlineKeyboardArrowRight,
+} from "react-icons/md";
 import { Box, Button, Flex, Heading, Text, TextField } from "@radix-ui/themes";
 import _ from "lodash";
 import moment from "moment-timezone";
 
 import AppTabs from "./Tabs";
+import LatestBet from "../LatestBets";
+import BetCard from "../../home/BetCard";
 
 const SearchField = ({ betsData }) => {
   const ref = useRef(null);
@@ -14,9 +20,14 @@ const SearchField = ({ betsData }) => {
   const [winningFormData, setWinningFormData] = useState(null);
   const [teams, setTeams] = useState([]);
   const [teamName, setTeamName] = useState("");
+  const [betsDataList, setBetsDataList] = useState("");
+  const [betPageCount, setBetPageCount] = useState(0);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     teamKeyArray();
+
+    initializeTeam();
   }, []);
 
   const teamKeyArray = () => {
@@ -29,6 +40,17 @@ const SearchField = ({ betsData }) => {
     );
 
     setTeams(teamKeys);
+  };
+
+  const initializeTeam = () => {
+    const prevTeam = localStorage.getItem("teamName");
+
+    if (prevTeam) {
+      setTeamName(prevTeam);
+      return;
+    }
+
+    setTeamName("Arsenal");
   };
 
   const allBets = _.filter(betsData, function (a) {
@@ -55,6 +77,34 @@ const SearchField = ({ betsData }) => {
       a.bet_status === "IN_PROGRESS"
     );
   });
+
+  const handleBetsClick = (type) => {
+    if (type === "plus") {
+      const pageShift = betPageCount + 5;
+      const newBetsData = allBets.slice(pageShift, pageShift + 5);
+      setBetsDataList(newBetsData);
+      setBetPageCount(pageShift);
+      setCounter(counter + 1);
+      return;
+    }
+
+    if (type === "minus") {
+      const pageShift = betPageCount - 5;
+      const newBetsData = allBets.slice(pageShift, pageShift + 5);
+      setBetsDataList(newBetsData);
+      setBetPageCount(pageShift);
+      setCounter(counter - 1);
+      return;
+    }
+
+    setBetsDataList(allBets);
+    setBetPageCount(0);
+  };
+
+  const paginationSize =
+    allBets.length % 5 > 0
+      ? Math.floor(allBets.length / 5) + 1
+      : Math.floor(allBets.length / 5);
 
   return (
     <>
@@ -197,81 +247,87 @@ const SearchField = ({ betsData }) => {
         </Flex>
       )}
 
-      <Flex gap={"1"}>
-        <TextField.Root
-          size={"3"}
-          variant="soft"
-          className="w-[100%]"
-          ref={ref}
-          id="searchInput"
-          placeholder="Search for Team…"
-          autoComplete="off"
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            const newList = _.filter(teams, function (a) {
-              return a.toLowerCase().includes(e.target.value.toLowerCase());
-            });
-            setTeamList(newList);
-          }}
-          onFocus={() => {
-            setSearchDisplay("");
-            return;
-          }}
-          onBlur={() => {
-            setSearchDisplay("hidden");
-            return;
-          }}
-        >
-          <TextField.Slot>
-            <MagnifyingGlassIcon height="16" width="16" />
-          </TextField.Slot>
-        </TextField.Root>
-      </Flex>
-
-      <Box
-        className={`max-w-xs bg-slate-500 w-44 max-h-52 overflow-y-scroll no-scrollbar absolute z-10 ${
-          !search ? "hidden" : searchDisplay
-        }`}
+      <Flex
+        direction="column-reverse"
+        gap={"2"}
+        justify={"between"}
+        className="md:flex-row md:items-center"
       >
-        {teamList.map((tl, i) => (
-          <Box
-            key={i}
-            className="text-gray-100 bg-slate-600 hover:bg-slate-700 p-2 cursor-pointer"
-            onMouseDown={() => {
-              setSearch(tl);
-              setTeamName(tl);
+        <Heading color="gray" mb={"4"}>
+          {teamName}
+        </Heading>
+
+        <Box className="flex-grow max-w-[500px] mb-4 md:mb-0">
+          <TextField.Root
+            size={"3"}
+            variant="soft"
+            ref={ref}
+            id="searchInput"
+            placeholder="Search for Team…"
+            autoComplete="off"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              const newList = _.filter(teams, function (a) {
+                return a.toLowerCase().includes(e.target.value.toLowerCase());
+              });
+              setTeamList(newList);
+            }}
+            onFocus={(e) => {
+              setSearchDisplay("");
+              e.target.select();
+              return;
+            }}
+            onBlur={() => {
+              setSearchDisplay("hidden");
+              return;
             }}
           >
-            {" "}
-            {tl}
+            <TextField.Slot>
+              <MagnifyingGlassIcon height="16" width="16" />
+            </TextField.Slot>
+          </TextField.Root>
+
+          <Box
+            className={`max-w-xs bg-slate-500 w-44 max-h-52 overflow-y-scroll no-scrollbar absolute z-10 ${
+              !search ? "hidden" : searchDisplay
+            }`}
+          >
+            {teamList.map((tl, i) => (
+              <Box
+                key={i}
+                className="text-gray-100 bg-slate-600 hover:bg-slate-700 p-2 cursor-pointer"
+                onMouseDown={() => {
+                  setSearch(tl);
+                  setTeamName(tl);
+                  setBetsDataList("");
+                  setBetPageCount(0);
+                  setCounter(0);
+                  localStorage.setItem("teamName", tl);
+                  // setSearch("");
+                }}
+              >
+                {" "}
+                {tl}
+              </Box>
+            ))}
           </Box>
-        ))}
-      </Box>
+        </Box>
+      </Flex>
+
+      <hr className="mb-3" />
 
       {teamName && (
         <Box my={"5"}>
-          <Flex gap={"2"} align={"end"} justify={"between"} mb={"3"}>
-            <Heading color="gray" mb={"4"}>
-              {teamName}
-            </Heading>
-
-            {/* <img
-              src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1010px-FC_Barcelona_%28crest%29.svg.png"
-              width={"50px"}
-              alt=""
-            /> */}
-          </Flex>
-
-          <Box>
+          <Box className="mb-10">
             <Heading size="3" mb="2" color="gold">
               Winning Form
             </Heading>
+
             <Flex gap="1" mb="6" wrap="wrap">
               {allBets.map((b) => (
-                <Flex direction="column">
+                <Flex key={b.id} direction="column">
                   <Box
-                    key={b.id}
                     className="cursor-pointer"
                     onClick={() => setWinningFormData(b)}
                   >
@@ -290,13 +346,58 @@ const SearchField = ({ betsData }) => {
             </Flex>
           </Box>
 
-          <AppTabs
-            allBets={allBets}
-            in_Progress={inProgress}
-            lost={lost}
-            success={success}
-            teamName={teamName}
-          />
+          <div className="w-full flex flex-col md:flex-row md:justify-between flex-grow gap-8">
+            <div className="flex-grow max-w-[700px]">
+              <Heading mb="4">Bet List Info</Heading>
+
+              <div className="md:h-[430px] mb-2 md:mb-0 flex flex-col gap-2">
+                {betsDataList
+                  ? betsDataList
+                      .slice(0, 5)
+                      .map((betData) => <BetCard betData={betData} />)
+                  : allBets
+                      .slice(0, 5)
+                      .map((betData) => <BetCard betData={betData} />)}
+              </div>
+
+              {paginationSize > 1 && (
+                <div className="text-right gap-2">
+                  <button
+                    disabled={!betPageCount}
+                    onClick={() => handleBetsClick("minus")}
+                    className={`px-3 py-1 ${
+                      !betPageCount
+                        ? "bg-slate-900 rounded text-gray-600"
+                        : "bg-slate-800 rounded"
+                    }`}
+                  >
+                    <MdOutlineKeyboardArrowLeft size="25" />
+                  </button>
+                  <button
+                    disabled={counter === paginationSize - 1}
+                    onClick={() => handleBetsClick("plus")}
+                    className={`px-3 py-1 ml-2 ${
+                      counter === paginationSize - 1
+                        ? "bg-slate-900 rounded text-gray-600"
+                        : "bg-slate-800 rounded"
+                    }`}
+                  >
+                    <MdOutlineKeyboardArrowRight size="25" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className=" flex items-start md:ml-10 mt-11">
+              <AppTabs
+                allBets={allBets}
+                in_Progress={inProgress}
+                lost={lost}
+                success={success}
+                teamName={teamName}
+              />
+            </div>
+          </div>
         </Box>
       )}
     </>
