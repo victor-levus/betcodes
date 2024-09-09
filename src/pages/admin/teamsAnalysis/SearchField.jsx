@@ -14,43 +14,42 @@ import BetCard from "../../home/BetCard";
 
 const SearchField = ({ betsData }) => {
   const ref = useRef(null);
-  const [searchDisplay, setSearchDisplay] = useState("hidden");
-  const [teamList, setTeamList] = useState([]);
-  const [search, setSearch] = useState();
-  const [winningFormData, setWinningFormData] = useState(null);
-  const [teams, setTeams] = useState([]);
-  const [teamName, setTeamName] = useState("");
   const [betsDataList, setBetsDataList] = useState("");
   const [betPageCount, setBetPageCount] = useState(0);
   const [counter, setCounter] = useState(0);
+  const [search, setSearch] = useState();
+  const [searchDisplay, setSearchDisplay] = useState("hidden");
+  const [teamList, setTeamList] = useState([]);
+  const [teamName, setTeamName] = useState("");
+  const [teams, setTeams] = useState([]);
+  const [winningFormData, setWinningFormData] = useState(null);
 
   useEffect(() => {
-    teamKeyArray();
-
-    initializeTeam();
+    initializeTeamsInfo();
   }, []);
 
-  const teamKeyArray = () => {
+  const initializeTeamsInfo = () => {
+    const prevTeam = localStorage.getItem("teamName");
     const teamKeys = [];
 
-    betsData.map((b) =>
-      teamKeys.includes(b.home_team) || teamKeys.includes(b.away_team)
-        ? null
-        : teamKeys.push(b.home_team, b.away_team)
-    );
+    betsData.map((b) => {
+      if (!teamKeys.includes(b.home_team)) {
+        teamKeys.push(b.home_team);
+      }
+
+      if (!teamKeys.includes(b.away_team)) {
+        teamKeys.push(b.away_team);
+      }
+    });
 
     setTeams(teamKeys);
-  };
-
-  const initializeTeam = () => {
-    const prevTeam = localStorage.getItem("teamName");
 
     if (prevTeam) {
       setTeamName(prevTeam);
       return;
     }
 
-    setTeamName("Arsenal");
+    setTeamName(teamKeys[0]);
   };
 
   const allBets = _.filter(betsData, function (a) {
@@ -304,7 +303,6 @@ const SearchField = ({ betsData }) => {
                   setBetPageCount(0);
                   setCounter(0);
                   localStorage.setItem("teamName", tl);
-                  // setSearch("");
                 }}
               >
                 {" "}

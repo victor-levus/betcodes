@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertDialog,
-  Box,
   Button,
   Dialog,
   Flex,
@@ -49,7 +48,20 @@ const BetModal = () => {
   ];
 
   const submitForm = handleSubmit(async (data) => {
-    const betFormData = Object.entries(data).reduce(
+    const trimData = {
+      away_team: data.away_team.trim(),
+      bet: data.bet.trim(),
+      bet_status: data.bet_status,
+      ft_away_score: data.ft_away_score,
+      ft_home_score: data.ft_home_score,
+      home_team: data.home_team.trim(),
+      ht_away_score: data.ht_away_score,
+      ht_home_score: data.ht_home_score,
+      match_time: data.match_time,
+      odd: data.odd,
+    };
+
+    const betFormData = Object.entries(trimData).reduce(
       (a, [k, v]) => (v === "" ? a : ((a[k] = v), a)),
       {}
     );

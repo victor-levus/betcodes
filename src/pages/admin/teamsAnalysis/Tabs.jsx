@@ -1,19 +1,19 @@
 import React from "react";
 import { SquareIcon } from "@radix-ui/react-icons";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import { FaCheck, FaSquare, FaTimes } from "react-icons/fa";
 import { Badge, Box, Flex, Heading, Tabs, Text } from "@radix-ui/themes";
 
 import Charts from "../../../components/Charts";
 
 const AppTabs = ({ allBets, success, lost, in_Progress, teamName }) => {
   return (
-    <Tabs.Root defaultValue="summary">
+    <Tabs.Root defaultValue="summary" className="w-full">
       <Box pt="1">
         <Tabs.Content value="summary" className="">
           <Text>
             <Box mb={"4"}>
               <Box>
-                <Flex gap="2" align={"center"} wrap={"wrap"}>
+                <Flex gap="2" align={"center"} justify="center" wrap={"wrap"}>
                   <Badge size={"1"}>
                     <Flex
                       className="w-30"
@@ -64,14 +64,46 @@ const AppTabs = ({ allBets, success, lost, in_Progress, teamName }) => {
                       <FaTimes className="text-red-500 text-lg" />
                     </Flex>
                   </Badge>
+
+                  {in_Progress?.length ? (
+                    <Badge size={"1"} color="gray">
+                      <Flex
+                        className="w-30"
+                        height={"8"}
+                        align={"center"}
+                        gap={"3"}
+                      >
+                        <Box>
+                          <Text size={"1"} mb={"3"}>
+                            Running
+                          </Text>
+                          <Heading size={"4"}>{in_Progress?.length}</Heading>
+                        </Box>
+                        <FaSquare className="text-gray-500 text-lg" />
+                      </Flex>
+                    </Badge>
+                  ) : (
+                    ""
+                  )}
                 </Flex>
               </Box>
             </Box>
           </Text>
 
           <Text size={"2"}>
-            <div style={{ display: "flex", alignItems: "end" }}>
-              <div style={{ position: "relative", minWidth: "308px" }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  position: "relative",
+                  minWidth: "308px",
+                }}
+              >
                 <Charts
                   inProgress={in_Progress?.length}
                   lost={lost?.length}
