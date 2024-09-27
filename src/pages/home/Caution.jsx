@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Card, Text } from "@radix-ui/themes";
+import { Box, Text } from "@radix-ui/themes";
 
 const Caution = () => {
 	return (
