@@ -2,5 +2,13 @@
 @import url("./styles/Playground.scss");
 
 .bg--darkT {
-  background-color: rgba(0, 0, 0, 0.747);
+	background-color: rgba(0, 0, 0, 0.747);
+}
+
+html,
+body {
+	max-width: 100%;
+	overflow-x: hidden;
+	padding: 0;
+	box-sizing: border-box;
 }
